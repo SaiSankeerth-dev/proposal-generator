@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Proposal Generator — For Freelance Marketers</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0F0F0F;
+    color: #F0EDE8;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  header {
+    border-bottom: 1px solid #1E1E1E;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #C8F000;
+  }
+
+  .tagline {
+    font-size: 12px;
+    color: #444;
+    letter-spacing: 0.04em;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 40px;
+  }
+
+  .hero {
+    margin-bottom: 52px;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #C8F000;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    color: #F0EDE8;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: #666;
+    max-width: 500px;
+    line-height: 1.65;
+  }
+
+  .card {
+    background: #161616;
+    border: 1px solid #222;
+    border-radius: 4px;
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #444;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #1E1E1E;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #777;
+    margin-bottom: 8px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: #0F0F0F;
+    border: 1px solid #2A2A2A;
+    border-radius: 3px;
+    padding: 11px 13px;
+    font-size: 14px;
+    color: #F0EDE8;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #C8F000;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 82px;
+    line-height: 1.5;
+  }
+
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .style-card {
+    background: #0F0F0F;
+    border: 1px solid #2A2A2A;
+    border-radius: 3px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .style-card.selected {
+    background: #141F00;
+    border-color: #C8F000;
+  }
+
+  .style-card-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #F0EDE8;
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .style-card.selected .style-card-title {
+    color: #C8F000;
+  }
+
+  .style-card-desc {
+    font-size: 11px;
+    color: #555;
+    line-height: 1.4;
+  }
+
+  .generate-btn {
+    width: 100%;
+    background: #C8F000;
+    color: #0F0F0F;
+    border: none;
+    border-radius: 3px;
+    padding: 15px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+
+  .generate-btn:hover { opacity: 0.88; }
+  .generate-btn:disabled {
+    background: #1A2200;
+    color: #C8F000;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+
+  .error-box {
+    background: #180A0A;
+    border: 1px solid #3A1515;
+    border-radius: 3px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #FF6B6B;
+    margin-top: 14px;
+  }
+
+  .output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #1E1E1E;
+  }
+
+  .output-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #C8F000;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid #2A2A2A;
+    border-radius: 3px;
+    padding: 7px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #777;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover { border-color: #444; color: #aaa; }
+
+  .proposal-output {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #B8B5B0;
+    white-space: pre-wrap;
+  }
+
+  .loading-dots {
+    text-align: center;
+    padding: 36px;
+    color: #444;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+
+  .dot {
+    display: inline-block;
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .hidden { display: none; }
+
+  @media (max-width: 600px) {
+    main { padding: 36px 20px; }
+    header { padding: 16px 20px; }
+    h1 { font-size: 28px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .style-grid { grid-template-columns: 1fr; }
+    .card { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">ProposalAI</span>
+  <span class="tagline">Client Proposal Generator · Freelance Edition</span>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-label">Built for freelance marketers</div>
+    <h1>Write a winning proposal<br>in under 3 minutes.</h1>
+    <p class="hero-sub">Fill in the fields. Pick your style. Get a complete, client-ready proposal — specific to their business, not a template they've seen before.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Project details</div>
+
+    <div class="grid-2">
+      <div>
+        <label for="clientName">Client name *</label>
+        <input id="clientName" type="text" placeholder="e.g. Sarah Chen">
+      </div>
+      <div>
+        <label for="clientBusiness">Client business *</label>
+        <input id="clientBusiness" type="text" placeholder="e.g. Bloom Skincare">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label for="projectType">Service type *</label>
+        <select id="projectType">
+          <option value="">Select service...</option>
+          <option>Social Media Management</option>
+          <option>Paid Ads (Meta/Google)</option>
+          <option>Content Writing / Copywriting</option>
+          <option>Email Marketing</option>
+          <option>Full Marketing Retainer</option>
+          <option>Brand Strategy</option>
+          <option>SEO Content</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="budget">Budget range *</label>
+        <input id="budget" type="text" placeholder="e.g. $2,500/month or $8,000 project">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label for="timeline">Timeline *</label>
+        <input id="timeline" type="text" placeholder="e.g. 3 months, starting March 1">
+      </div>
+      <div>
+        <label for="yourName">Your name *</label>
+        <input id="yourName" type="text" placeholder="e.g. Alex Rivera">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="clientGoal">Client's main goal *</label>
+      <textarea id="clientGoal" placeholder="e.g. Grow Instagram from 2K to 10K and increase DTC sales by 30% in Q2"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="painPoint">Their current pain point</label>
+      <textarea id="painPoint" placeholder="e.g. Two agencies overpromised and underdelivered. Content feels off-brand. No reporting."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="apiKey">Your Anthropic API key *</label>
+      <input id="apiKey" type="password" placeholder="sk-ant-...">
+      <div style="font-size:11px;color:#555;margin-top:6px;">Stored only in this browser tab's session storage. Never sent anywhere except api.anthropic.com, never saved to this repo. Get a key at <span style="color:#888;">console.anthropic.com</span>.</div>
+    </div>
+
+    <div class="card-label" style="margin-top: 8px;">Proposal style</div>
+
+    <div class="style-grid">
+      <div class="style-card selected" data-style="consultative" onclick="selectStyle(this)">
+        <div class="style-card-title">Consultative</div>
+        <div class="style-card-desc">Strategic, empathetic. Best for retainers and clients who've been burned before.</div>
+      </div>
+      <div class="style-card" data-style="direct" onclick="selectStyle(this)">
+        <div class="style-card-title">Direct</div>
+        <div class="style-card-desc">No fluff. Deliverables first. Best for busy founders and performance clients.</div>
+      </div>
+      <div class="style-card" data-style="roi" onclick="selectStyle(this)">
+        <div class="style-card-title">ROI-Focused</div>
+        <div class="style-card-desc">Leads with outcomes. Best for paid ads and growth-stage clients.</div>
+      </div>
+    </div>
+
+    <button class="generate-btn" id="generateBtn" onclick="generate()">Generate Proposal →</button>
+    <div id="errorBox" class="error-box hidden"></div>
+  </div>
+
+  <div id="outputCard" class="card hidden">
+    <div class="output-header">
+      <span class="output-title">Your proposal — ready to send</span>
+      <button class="copy-btn" onclick="copyProposal()">Copy all</button>
+    </div>
+    <div id="loadingDots" class="loading-dots hidden">
+      <span class="dot">●</span> <span class="dot">●</span> <span class="dot">●</span>
+      <br><br>Writing your proposal...
+    </div>
+    <div id="proposalText" class="proposal-output"></div>
+  </div>
+</main>
+
+<script>
+  let selectedStyle = 'consultative';
+
+  const apiKeyInput = document.getElementById('apiKey');
+  apiKeyInput.value = sessionStorage.getItem('anthropicApiKey') || '';
+  apiKeyInput.addEventListener('input', () => {
+    sessionStorage.setItem('anthropicApiKey', apiKeyInput.value.trim());
+  });
+
+  function selectStyle(el) {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedStyle = el.dataset.style;
+  }
+
+  function val(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.classList.remove('hidden');
+  }
+
+  function hideError() {
+    document.getElementById('errorBox').classList.add('hidden');
+  }
+
+  function buildPrompt() {
+    const styleInstructions = {
+      consultative: "Write in a consultative, strategic tone. Position yourself as a trusted advisor. Show deep understanding of their business context. Use language like 'we recommend', 'based on what you've shared', 'our approach'. Lead with empathy, then strategy, then execution.",
+      direct: "Write in a direct, no-nonsense tone. Use bullet points where effective. Lead with deliverables and timeline. Everything specific — no vague promises. Respect the client's time.",
+      roi: "Lead every section with business outcomes and return on investment. Frame every deliverable as a business result. Use numbers and projections where plausible. End with a clear ROI argument."
+    };
+
+    return `You are an expert freelance marketing consultant writing a client-winning proposal.
+
+CLIENT: ${val('clientName')} at ${val('clientBusiness')}
+SERVICE: ${val('projectType')}
+BUDGET: ${val('budget')}
+TIMELINE: ${val('timeline')}
+CLIENT GOAL: ${val('clientGoal')}
+PAIN POINT: ${val('painPoint')}
+FREELANCER: ${val('yourName')}
+
+STYLE: ${styleInstructions[selectedStyle]}
+
+Write the proposal with these sections:
+1. Opening (2-3 sentences proving you understand their specific situation)
+2. What I Understand (tight summary of their problem — make them feel heard)
+3. My Proposed Approach (3-4 concrete steps specific to the service)
+4. Deliverables (clear bulleted list of exactly what they receive)
+5. Timeline (how work unfolds — reference their timeline)
+6. Investment (frame the budget positively — connect to value)
+7. Why Me (2-3 sentences — confident, not boastful)
+8. Next Step (one clear, specific CTA with two day options for a call)
+
+Rules:
+- Use their actual name and business name throughout
+- Never use generic phrases like "I'm excited to work with you" or "touch base"
+- Make it feel written specifically for them
+- Total length: 400-550 words
+- Start directly with the opening paragraph, no subject line or salutation`;
+  }
+
+  async function generate() {
+    hideError();
+
+    const required = ['clientName', 'clientBusiness', 'projectType', 'budget', 'timeline', 'clientGoal', 'yourName', 'apiKey'];
+    const missing = required.filter(id => !val(id));
+    if (missing.length > 0) {
+      showError(missing.includes('apiKey') ? 'Enter your Anthropic API key to generate a proposal.' : 'Please fill in all required fields before generating.');
+      return;
+    }
+
+    const btn = document.getElementById('generateBtn');
+    const outputCard = document.getElementById('outputCard');
+    const loadingDots = document.getElementById('loadingDots');
+    const proposalText = document.getElementById('proposalText');
+
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    outputCard.classList.remove('hidden');
+    loadingDots.classList.remove('hidden');
+    proposalText.textContent = '';
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': val('apiKey'),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: buildPrompt() }]
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        loadingDots.classList.add('hidden');
+        showError('API error: ' + data.error.message);
+        return;
+      }
+
+      const text = data.content?.find(b => b.type === 'text')?.text || '';
+      loadingDots.classList.add('hidden');
+      proposalText.textContent = text;
+
+    } catch (err) {
+      loadingDots.classList.add('hidden');
+      showError('Something went wrong. Check your connection and try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Generate Proposal →';
+    }
+  }
+
+  function copyProposal() {
+    const text = document.getElementById('proposalText').textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => btn.textContent = 'Copy all', 2000);
+  }
+</script>
+
+</body>
+</html>
